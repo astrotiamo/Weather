@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js">
+    </script>
+    <title>
+        天气网
+    </title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #container{
+            background: url(img/1.jpg) no-repeat;
+            height: 1332px;
+            width: 100%;
+            overflow: hidden;
+        }
+        .title{
+            width: 446px;
+            height: 151px;
+            margin: 300px auto 0px auto;
+        }
+        .search{
+            width: 760px;
+            height: 70px;
+            margin: 50px auto 0px auto;
+            
+        }
+        .search_flex{
+            position: relative;
+            margin-left: 400px;
+        }
+        form{
+            display: inline;
+        }
+        input[type="text"]{
+            width: 600px;
+            height: 40px;
+        }
+        button{
+            position: absolute;
+            left: 603px;
+            bottom: 25px;
+            width: 140px;
+            height: 47px;
+            border: rgb(146, 146, 255) solid 2px;
+            background-color: rgb(238, 238, 238);
+            color: white;
+        }
+        .now_search{
+            text-align: center;
+        }
+        #now{
+            color: white;
+        }
+        #weather{
+            margin-left: 400px;
+            margin-top: 30px;
+            color: white;
+        }
+        @media screen and (max-width: 1300px){
+            .search_flex{
+                margin-left: 35%;
+            }
+            .search{
+                width: 300px;
+            }
+            input[type="text"]{
+                width: 300px;
+                height: 40px;
+            }
+            button{
+                left: 80%;
+            }
+            #weather{
+                margin-left: 15%;
+            }
+        }
+        @media screen and (max-width: 1000px){
+            .search_flex{
+                margin-left: 25%;
+            }
+        }
+    </style>
+    <script>
+        $(function(){
+            $("button").click(function(){
+                var ID=document.getElementById("input").value;
+                var now=document.getElementById("now");
+                now.innerHTML="当前搜索："+ID;
+                $.ajax({
+                    type:'get',
+                    url:'http://wthrcdn.etouch.cn/weather_mini',
+                    dataType:'JSON',
+                    data:{
+                        city:ID
+                    },
+                    contentType:"application/json",
+                    success:function(res){
+                        var weather=document.getElementById("weather");
+                        if(res.status==1000){
+                            weather.innerHTML=res.data.city+':'+res.data.forecast[0].date+'，'+res.data.forecast[0].high
+                            +'，'+res.data.forecast[0].low+'，'+res.data.forecast[0].fengxiang;
+                            console.log(res);
+                        }else{
+                            weather.innerHTML="403 fidden";
+                            console.log(res);
+                        }
+                    },error:function(err){
+                        var weather=document.getElementById("weather");
+                        weather.innerHTML="403 fidden"
+                        console.log(err);
+                    }
+                })
+            })
+        })
+    </script>
+</head>
+<body>
+    <div id="container">
+        <div class="title">
+            <img src="img/font1.png" alt="">
+        </div>
+        <div class="search_flex search">
+            <form>
+                <input type="text" name="text" id="input">
+            </form>
+            <button>搜索</button>
+        </div>
+        <div class="now_search">
+            <div id="now">
+            </div>
+        </div>
+        <div id="weather">
+        </div>
+    </div>
+</body>
